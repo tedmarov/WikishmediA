@@ -5,15 +5,30 @@ async function handleSubmit(event) {
     const inputValue = document.querySelector('.js-search-input').value;
     // No whitespace
     const searchQuery = inputValue.trim();
+
+    const searchResults = document.querySelector('.js-search-results');
+    // Clear the past results
+    searchResults.innerHTML = '';
+
+    const spinnythingy = document.querySelector('.js-spinner');
+    spinnythingy.classList.remove('hidden');
+
     // Print value of SQ
     console.log(searchQuery)
     
     try {
         const results = await searchWikishmedia(searchQuery);
+        if (results.query.searchinfo.totalhits === 0) {
+            alert('No results :( Try different WikishmediA keywords');
+            return
+        }
+
         displayResults(results);
     }   catch (err) {
         console.log(err);
         alert('Failed to search WikishmediA :(');
+    }   finally {
+        spinnythingy.classList.add('hidden');
     }
 }
 
